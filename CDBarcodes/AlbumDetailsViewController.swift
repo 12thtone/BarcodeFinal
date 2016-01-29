@@ -16,7 +16,7 @@ class AlbumDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        // Delete Me
     }
 
     override func didReceiveMemoryWarning() {
