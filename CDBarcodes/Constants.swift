@@ -11,7 +11,9 @@ import Foundation
 import Foundation
 import UIKit
 
-let DISCOGS_KEY = ""
-let DISCOGS_SECRET = ""
-let DISCOGS_AUTH_URL = ""
+let DISCOGS_KEY = "zznuBbHZWyIiPFqJGtEX"
+
+let DISCOGS_SECRET = "YnAEaJJVOJEWvyvtAqRmeoNbrfKmZYiE"
+
+let DISCOGS_AUTH_URL = "https://api.discogs.com/database/search?q="
 
