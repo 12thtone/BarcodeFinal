@@ -52,7 +52,7 @@
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="O4Q-wf-t8t">
                                 <rect key="frame" x="550" y="7" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="bar-code"/>
+                                <state key="normal" image="bar-code" backgroundImage="bar-code"/>
                                 <connections>
                                     <segue destination="DBn-zX-a5A" kind="show" id="qyZ-dC-kYs"/>
                                 </connections>
@@ -81,13 +81,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Barcode Reader" id="fRe-yH-f35">
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="cancel" id="IM5-6H-tte">
-                            <connections>
-                                <action selector="cancelTapped:" destination="DBn-zX-a5A" id="ysI-ld-b69"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Barcode Reader" id="fRe-yH-f35"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gds-Bh-dqx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
