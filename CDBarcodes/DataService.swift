@@ -29,25 +29,25 @@ class DataService {
         
         print("AF Code: \(codeNumber)")
         
-        Alamofire.request(.GET, "\(DISCOGS_AUTH_URL)\(codeNumber)&?barcode\(DISCOGS_KEY)\(DISCOGS_SECRET)")
+        let discogsURL = "\(DISCOGS_AUTH_URL)\(codeNumber)&?barcode&key=\(DISCOGS_KEY)&secret=\(DISCOGS_SECRET)"
+        
+        print(discogsURL)
+        
+        Alamofire.request(.GET, discogsURL)
             .responseJSON { response in
                 
                 var json = JSON(response.result.value!)
                 
                 let albumArtistTitle = "\(json["results"][0]["title"])"
                 let albumYear = "\(json["results"][0]["year"])"
-//                let albumYear = "\(json["results"][0]["genre"][0])"
-                
-//                self.dataService._ALBUM = albumArtistTitle
-//                self.dataService._YEAR = albumYear
-                
-                Album.init(artistAlbum: albumArtistTitle, albumYear: albumYear)
                 
                 print(albumArtistTitle)
                 print(albumYear)
+
+                self.dataService._ALBUM = albumArtistTitle
+                self.dataService._YEAR = albumYear
                 
+                NSNotificationCenter.defaultCenter().postNotificationName("AlbumNotification", object: nil)
         }
-        
     }
-    
 }

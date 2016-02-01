@@ -19,16 +19,26 @@ struct BarcodeString {
 
 class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
-    var captureSession: AVCaptureSession!
+    var session: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Is this needed ?!?!?!?!?!?!?!?!?
+        
         view.backgroundColor = UIColor.blackColor()
-        captureSession = AVCaptureSession()
+        
+        // Create a session object.
+        
+        session = AVCaptureSession()
+        
+        // Set the captureDevice.
         
         let videoCaptureDevice = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+        
+        // Create input object.
+        
         let videoInput: AVCaptureDeviceInput
         
         do {
@@ -37,72 +47,87 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
             return
         }
         
-        if (captureSession.canAddInput(videoInput)) {
-            captureSession.addInput(videoInput)
+        // Add input to the session.
+        
+        if (session.canAddInput(videoInput)) {
+            session.addInput(videoInput)
         } else {
             failed();
             return;
         }
         
+        // Create output object.
+        
         let metadataOutput = AVCaptureMetadataOutput()
         
-        if (captureSession.canAddOutput(metadataOutput)) {
-            captureSession.addOutput(metadataOutput)
+        // Add output to the session.
+        
+        if (session.canAddOutput(metadataOutput)) {
+            session.addOutput(metadataOutput)
+            
+            // Send captured data to the delegate object.
             
             metadataOutput.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue())
+            
+            // Set barcode types for which to scan.
+            
             metadataOutput.metadataObjectTypes = [AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypePDF417Code]
         } else {
             failed()
             return
         }
         
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession);
+        // Add previewLayer and have it show the video data.
+        
+        previewLayer = AVCaptureVideoPreviewLayer(session: session);
         previewLayer.frame = view.layer.bounds;
         previewLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
         view.layer.addSublayer(previewLayer);
         
-        captureSession.startRunning();
+        // Begin the capture session.
+        
+        session.startRunning();
     }
     
     func failed() {
         let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .Alert)
         ac.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         presentViewController(ac, animated: true, completion: nil)
-        captureSession = nil
+        session = nil
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if (captureSession?.running == false) {
-            captureSession.startRunning();
+        if (session?.running == false) {
+            session.startRunning();
         }
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        if (captureSession?.running == true) {
-            captureSession.stopRunning();
+        if (session?.running == true) {
+            session.stopRunning();
         }
     }
     
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
-        captureSession.stopRunning()
+        session.stopRunning()
         
         if let metadataObject = metadataObjects.first {
             let readableObject = metadataObject as! AVMetadataMachineReadableCodeObject;
             
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-            foundCode(readableObject.stringValue);
+            barcodeDetected(readableObject.stringValue);
         }
     }
     
-    func foundCode(code: String) {
+    func barcodeDetected(code: String) {
         print(code)
         
-        let alert = UIAlertController(title: "Barcode Detected", message: code, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "Hunt", style: UIAlertActionStyle.Destructive, handler: { action in
+        let alert = UIAlertController(title: "Found a Barcode!", message: code, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Search", style: UIAlertActionStyle.Destructive, handler: { action in
             
             let trimmedCode = code.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
             
