@@ -14,16 +14,8 @@ class DataService {
     
     static let dataService = DataService()
     
-    private var _ALBUM_FROM_DISCOGS = ""
-    private var _YEAR_FROM_DISCOGS = ""
-    
-    var ALBUM_FROM_DISCOGS: String {
-        return _ALBUM_FROM_DISCOGS
-    }
-    
-    var YEAR_FROM_DISCOGS: String {
-        return _YEAR_FROM_DISCOGS
-    }
+    private(set) var ALBUM_FROM_DISCOGS = ""
+    private(set) var YEAR_FROM_DISCOGS = ""
     
     static func searchAPI(codeNumber: String) {
         
@@ -44,8 +36,8 @@ class DataService {
                 print(albumArtistTitle)
                 print(albumYear)
 
-                self.dataService._ALBUM_FROM_DISCOGS = albumArtistTitle
-                self.dataService._YEAR_FROM_DISCOGS = albumYear
+                self.dataService.ALBUM_FROM_DISCOGS = albumArtistTitle
+                self.dataService.YEAR_FROM_DISCOGS = albumYear
                 
                 NSNotificationCenter.defaultCenter().postNotificationName("AlbumNotification", object: nil)
         }

@@ -9,19 +9,12 @@
 import Foundation
 
 class Album {
-    private var _album: String!
-    private var _year: String!
-    
-    var album: String {
-        return _album
-    }
-    
-    var year: String {
-        return _year
-    }
+        
+    private(set) var album: String!
+    private(set) var year: String!
     
     init(artistAlbum: String, albumYear: String) {
-        self._album = "Album: \n\(artistAlbum)"
-        self._year = "Released in: \(albumYear)"
+        self.album = "Album: \n\(artistAlbum)"
+        self.year = "Released in: \(albumYear)"
     }
 }
