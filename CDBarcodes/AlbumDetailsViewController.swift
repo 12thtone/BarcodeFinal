@@ -13,6 +13,10 @@ class AlbumDetailsViewController: UIViewController {
     @IBOutlet weak var artistAlbumLabel: UILabel!
     @IBOutlet weak var yearLabel: UILabel!
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -20,10 +24,6 @@ class AlbumDetailsViewController: UIViewController {
         
         artistAlbumLabel.text = ""
         yearLabel.text = ""
-    }
-    
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     override func didReceiveMemoryWarning() {

@@ -25,10 +25,6 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Is this needed ?!?!?!?!?!?!?!?!?
-        
-        view.backgroundColor = UIColor.blackColor()
-        
         // Create a session object.
         
         session = AVCaptureSession()
@@ -39,7 +35,7 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
         
         // Create input object.
         
-        let videoInput: AVCaptureDeviceInput
+        let videoInput: AVCaptureDeviceInput?
         
         do {
             videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
@@ -52,8 +48,7 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
         if (session.canAddInput(videoInput)) {
             session.addInput(videoInput)
         } else {
-            failed();
-            return;
+            scanningNotPossible()
         }
         
         // Create output object.
@@ -65,16 +60,16 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
         if (session.canAddOutput(metadataOutput)) {
             session.addOutput(metadataOutput)
             
-            // Send captured data to the delegate object.
+            // Send captured data to the delegate object via a serial queue.
             
             metadataOutput.setMetadataObjectsDelegate(self, queue: dispatch_get_main_queue())
             
-            // Set barcode types for which to scan.
+            // Set barcode type for which to scan: EAN-13.
             
-            metadataOutput.metadataObjectTypes = [AVMetadataObjectTypeEAN8Code, AVMetadataObjectTypeEAN13Code, AVMetadataObjectTypePDF417Code]
+            metadataOutput.metadataObjectTypes = [AVMetadataObjectTypeEAN13Code]
+            
         } else {
-            failed()
-            return
+            scanningNotPossible()
         }
         
         // Add previewLayer and have it show the video data.
@@ -86,21 +81,14 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
         
         // Begin the capture session.
         
-        session.startRunning();
-    }
-    
-    func failed() {
-        let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .Alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-        presentViewController(ac, animated: true, completion: nil)
-        session = nil
+        session.startRunning()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         if (session?.running == false) {
-            session.startRunning();
+            session.startRunning()
         }
     }
     
@@ -108,29 +96,53 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
         super.viewWillDisappear(animated)
         
         if (session?.running == true) {
-            session.stopRunning();
+            session.stopRunning()
         }
     }
     
+    func scanningNotPossible() {
+        let alert = UIAlertController(title: "Can't Scan.", message: "Let's try a device equipped with a camera.", preferredStyle: .Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        presentViewController(alert, animated: true, completion: nil)
+        session = nil
+    }
+    
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
-        session.stopRunning()
+//        session.stopRunning()
         
-        if let metadataObject = metadataObjects.first {
-            let readableObject = metadataObject as! AVMetadataMachineReadableCodeObject;
+        // Get the first object from the metadataObjects array.
+        
+        if let barcodeData = metadataObjects.first {
+            
+            // Turn it into machine readable code
+            
+            let barcodeReadable = barcodeData as? AVMetadataMachineReadableCodeObject;
+            
+            if let readableCode = barcodeReadable {
+                
+                // Send the barcode as a string to barcodeDetected()
+                
+                barcodeDetected(readableCode.stringValue);
+            }
+            
+            // Vibrate the device to give the user some feedback.
             
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-            barcodeDetected(readableObject.stringValue);
+            
+            // Avoid a very buzzy device.
+            
+            session.stopRunning()
         }
     }
     
     func barcodeDetected(code: String) {
-        print(code)
         
         let alert = UIAlertController(title: "Found a Barcode!", message: code, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Search", style: UIAlertActionStyle.Destructive, handler: { action in
             
             let trimmedCode = code.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
             
+            // EAN or UPC?
             // Check for added "0" at beginning of code.
             
             let trimmedCodeString = "\(trimmedCode)"
@@ -139,17 +151,19 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
             if trimmedCodeString.hasPrefix("0") && trimmedCodeString.characters.count > 1 {
                 trimmedCodeNoZero = String(trimmedCodeString.characters.dropFirst())
                 
+                // Send the doctored UPC to DataService.searchAPI()
+                
                 DataService.searchAPI(trimmedCodeNoZero)
             } else {
+                
+                // Send the doctored EAN to DataService.searchAPI()
+                
                 DataService.searchAPI(trimmedCodeString)
             }
             
             self.navigationController?.popViewControllerAnimated(true)
         }))
+        
         self.presentViewController(alert, animated: true, completion: nil)
     }
-    /*
-    override func prefersStatusBarHidden() -> Bool {
-        return true
-    }*/
 }
