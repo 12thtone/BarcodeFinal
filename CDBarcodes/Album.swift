@@ -21,7 +21,7 @@ class Album {
     }
     
     init(artistAlbum: String, albumYear: String) {
-        self._album = artistAlbum
-        self._year = albumYear
+        self._album = "Album: \n\(artistAlbum)"
+        self._year = "Released in: \(albumYear)"
     }
 }

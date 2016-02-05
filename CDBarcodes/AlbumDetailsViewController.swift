@@ -20,9 +20,9 @@ class AlbumDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setLabels:", name:"AlbumNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setLabels:", name: "AlbumNotification", object: nil)
         
-        artistAlbumLabel.text = ""
+        artistAlbumLabel.text = "Let's scan an album!"
         yearLabel.text = ""
     }
 
@@ -33,7 +33,7 @@ class AlbumDetailsViewController: UIViewController {
     
     func setLabels(notification: NSNotification){
         
-        let albumInfo = Album(artistAlbum: DataService.dataService.ALBUM, albumYear: DataService.dataService.YEAR)
+        let albumInfo = Album(artistAlbum: DataService.dataService.ALBUM_FROM_DISCOGS, albumYear: DataService.dataService.YEAR_FROM_DISCOGS)
         
         artistAlbumLabel.text = "\(albumInfo.album)"
         yearLabel.text = "\(albumInfo.year)"

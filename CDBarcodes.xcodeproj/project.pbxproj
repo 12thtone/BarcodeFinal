@@ -119,7 +119,6 @@
 				2CA0E8501C5BCD3E007F20DE /* Service */,
 				2CA0E84F1C5BCD34007F20DE /* Model */,
 				2CA0E84E1C5BCD02007F20DE /* Controller */,
-				2CA0E8511C5BCD74007F20DE /* View */,
 				2CA0E81F1C5BCC21007F20DE /* AppDelegate.swift */,
 				2CA0E8231C5BCC21007F20DE /* Main.storyboard */,
 				2CA0E8261C5BCC21007F20DE /* Assets.xcassets */,
@@ -178,13 +177,6 @@
 				2CA0E8581C5BD12C007F20DE /* DataService.swift */,
 			);
 			name = Service;
-			sourceTree = "<group>";
-		};
-		2CA0E8511C5BCD74007F20DE /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = View;
 			sourceTree = "<group>";
 		};
 		5F8945FC612AAB62498C3C1D /* Frameworks */ = {

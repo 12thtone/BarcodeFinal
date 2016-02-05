@@ -101,6 +101,9 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
     }
     
     func scanningNotPossible() {
+        
+        // Let the user know that scanning isn't possible with the current device.
+        
         let alert = UIAlertController(title: "Can't Scan.", message: "Let's try a device equipped with a camera.", preferredStyle: .Alert)
         alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         presentViewController(alert, animated: true, completion: nil)
@@ -108,7 +111,6 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
     }
     
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputMetadataObjects metadataObjects: [AnyObject]!, fromConnection connection: AVCaptureConnection!) {
-//        session.stopRunning()
         
         // Get the first object from the metadataObjects array.
         
