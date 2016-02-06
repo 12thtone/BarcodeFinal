@@ -9,11 +9,6 @@
 import UIKit
 import AVFoundation
 
-
-struct BarcodeString {
-    var barcodeString: String
-}
-
 class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     var session: AVCaptureSession!
