@@ -14,6 +14,9 @@ class Album {
     private(set) var year: String!
     
     init(artistAlbum: String, albumYear: String) {
+        
+        // Add a little extra text to the album information.
+        
         self.album = "Album: \n\(artistAlbum)"
         self.year = "Released in: \(albumYear)"
     }

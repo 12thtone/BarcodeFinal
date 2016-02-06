@@ -19,11 +19,9 @@ class DataService {
     
     static func searchAPI(codeNumber: String) {
         
-        print("AF Code: \(codeNumber)")
+        // The URL we will use to get out album data from Discogs
         
         let discogsURL = "\(DISCOGS_AUTH_URL)\(codeNumber)&?barcode&key=\(DISCOGS_KEY)&secret=\(DISCOGS_SECRET)"
-        
-        print(discogsURL)
         
         Alamofire.request(.GET, discogsURL)
             .responseJSON { response in
@@ -33,11 +31,10 @@ class DataService {
                 let albumArtistTitle = "\(json["results"][0]["title"])"
                 let albumYear = "\(json["results"][0]["year"])"
                 
-                print(albumArtistTitle)
-                print(albumYear)
-
                 self.dataService.ALBUM_FROM_DISCOGS = albumArtistTitle
                 self.dataService.YEAR_FROM_DISCOGS = albumYear
+                
+                // Post a notification to let AlbumDetailsViewController know we have some data.
                 
                 NSNotificationCenter.defaultCenter().postNotificationName("AlbumNotification", object: nil)
         }

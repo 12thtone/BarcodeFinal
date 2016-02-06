@@ -139,8 +139,12 @@ class BarcodeReaderViewController: UIViewController, AVCaptureMetadataOutputObje
     
     func barcodeDetected(code: String) {
         
+        // Let the user know we've found something.
+        
         let alert = UIAlertController(title: "Found a Barcode!", message: code, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Search", style: UIAlertActionStyle.Destructive, handler: { action in
+            
+            // Remove the spaces.
             
             let trimmedCode = code.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
             

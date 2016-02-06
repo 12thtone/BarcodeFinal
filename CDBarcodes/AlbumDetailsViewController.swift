@@ -20,10 +20,10 @@ class AlbumDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setLabels:", name: "AlbumNotification", object: nil)
-        
         artistAlbumLabel.text = "Let's scan an album!"
         yearLabel.text = ""
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setLabels:", name: "AlbumNotification", object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,6 +32,8 @@ class AlbumDetailsViewController: UIViewController {
     }
     
     func setLabels(notification: NSNotification){
+        
+        // Use the data from DataService.swift to initialize the Album.
         
         let albumInfo = Album(artistAlbum: DataService.dataService.ALBUM_FROM_DISCOGS, albumYear: DataService.dataService.YEAR_FROM_DISCOGS)
         
