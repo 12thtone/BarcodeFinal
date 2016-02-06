@@ -7,9 +7,6 @@
 //
 
 import UIKit
-
-// Import AVFountation - from Linked Frameworks and Libraries.
-
 import AVFoundation
 
 
